@@ -30,6 +30,40 @@ function startSearch() {
             "Update Role",
         ]
     })
+    .then(function(answer) {
+        console.log(answer);
+
+        if(answer.start === "All Employees") {
+            getAll();
+        }
+
+        else if(answer.start === "Departments") {
+            getDepts();
+        }
+
+        else if(answer.start === "Roles") {
+            getRoles();
+        }
+
+        else if(answer.start === "Add Employee") {
+            addEmployee();
+        }
+
+        else if(answer.start === "Add Department") {
+            addDept();
+        }
+
+        else if(answer.start === "Add Role") {
+            addRole();
+        }
+
+        else if(answer.start === "Update Role") {
+            updateRole();
+        } else {
+            connection.end();
+        }
+
+    })
 }
 
 
