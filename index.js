@@ -1,6 +1,6 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const inquirer = require('inquirer');
-const Connection = require('mysql/lib/Connection');
+
 require('console.table');
 
 
@@ -27,20 +27,20 @@ function startSearch() {
             "Add Employee",
             "Add Role",
             "Add Department",
-            "QUIT",
+            "EXIT",
         ],
         name: "choice"
     }).then(answers => {
         console.log(answers.choice);
         switch (answers.choice) {
             case "Show All Employees":
-                showAllEmployees()
+                showAllDepartments()
                 break;
             case "Show All Roles":
                 showAllRoles()
                 break;
             case "Show All Departments":
-                showAllDepartments()
+                showAllEmployees()
                 break;
             case "Add Employee":
                 addEmployee()
@@ -50,74 +50,78 @@ function startSearch() {
                 break;
             case "Add Department":
                 addDepartment();
-            default:
-                connection.end()
+            case "EXIT":
+                exit()
                 break;
 
         }
     })
 }
 
-const fn = {
-    showAllEmployees() {
-        db.query('SELECT * FROM employees', function (err, results) {
-            if (err) return console.err(err);
-            console.table(results);
-            startSearch();
-        });
-    },
 
-    showAllRoles() {
-        db.query('SELECT * FROM role', function (err, results) {
-            if (err) return console.err(err);
-            console.table(results);
-            startSearch();
-        });
-    },
+function showAllEmployees() {
+    // let query = "SELECT * FROM employee";
+    db.query('SELECT * FROM employee', function (err, results) {
+        // if (err) return console.err(err);
+        if (err) throw err;
+        console.table(results);
+        startSearch();
+    });
+}
 
-    showAllDepartments() {
-        db.query('SELECT * FROM departments', function (err, results) {
-            if (err) return console.err(err);
-            console.table(results);
-            startSearch();
-        });
-    },
+function showAllRoles() {
+    db.query('SELECT * FROM role', function (err, results) {
+        // if (err) return console.err(err);
+        if (err) throw err;
+        console.table(results);
+        startSearch();
+    });
+}
 
-    addEmployee() {
-        inquirer.prompt([
-            {
-                type: 'input',
-                name: 'firstName',
-                message: 'What is the employees first name?'
-            },
-            {
-                type: 'input',
-                name: 'lastName',
-                message: 'What is the employees last name?'
-            },
-            {
-                type: 'number',
-                name: 'roleId',
-                message: 'What is the employees role ID??'
-            },
-            {
-                type: 'number',
-                name: 'managerId',
-                message: 'What is the employees manger ID?'
-            },
+function showAllDepartments() {
+    // let query = "SELECT * FROM department";
+    db.query('SELECT * FROM department', function (err, results) {
+        if (err) throw err;
+        console.table(results);
+        startSearch();
+    });
+}
 
-        ]).then(function(res) {
-            connection.query('INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)', [res.firstName, res.lastName, res.roleId, res.managerId], function(err, data) {
-                if(err) throw err;
-                console.table("Employee Added!");
-                startSearch();
-            })
-        })
-    },
-    exit() {
-        process.exit();
-    },
-};
+//     funtion addEmployee() {
+//     inquirer.prompt([
+//         {
+//             type: 'input',
+//             name: 'firstName',
+//             message: 'What is the employees first name?'
+//         },
+//         {
+//             type: 'input',
+//             name: 'lastName',
+//             message: 'What is the employees last name?'
+//         },
+//         {
+//             type: 'number',
+//             name: 'roleId',
+//             message: 'What is the employees role ID??'
+//         },
+//         {
+//             type: 'number',
+//             name: 'managerId',
+//             message: 'What is the employees manger ID?'
+//         },
+
+//     ]).then(function (res) {
+//         connection.query('INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)', [res.firstName, res.lastName, res.roleId, res.managerId], function (err, data) {
+//             if (err) throw err;
+//             console.table("Employee Added!");
+//             startSearch();
+//         })
+//     })
+// }
+// exit() {
+//     process.exit();
+// }
+// }
 
 // const init = () => {
 //     const choices = [
