@@ -1,76 +1,69 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-const consoleTable = require('console.table');
+require('console.table');
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    port: 3001,
-    user: 'root',
-    password: "",
-    database: 'employee_db',
+
+const db = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: '',
+    database: "employees_db",
 });
-connection.connect((err) => {
-    if (err) throw err;
 
+db.connect(function (err) {
+    if (err) throw err;
     startSearch();
 });
 
-function startSearch() {
-    inquirer.prompt({
-        name: 'start',
-        type: 'list',
-        message: 'What would you like to choose?',
-        choices: [
-            "All Employees",
-            "Departments",
-            "Roles",
-            "Add Employee",
-            "Add Department",
-            "Add Role",
-            "Update Role",
-        ]
-    })
-    .then(function(answer) {
-        console.log(answer);
+const fn = {
+    showAllEmployees() {
+        db.query('SELECT * FROM employees', function (err, results) {
+            if (err) return console.err(err);
+            console.table(results);
+            startSearch();
+        });
+    },
 
-        if(answer.start === "All Employees") {
-            getAll();
+    showAllRoles() {
+        db.query('SELECT * FROM role', function (err, results) {
+            if (err) return console.err(err);
+            console.table(results);
+            startSearch();
+        });
+    },
+
+    showAllDepartments() {
+        db.query('SELECT * FROM departments', function (err, results) {
+            if (err) return console.err(err);
+            console.table(results);
+            startSearch();
+        });
+    },
+    exit() {
+        process.exit();
+    },
+};
+
+const init = () => {
+    const choices = [
+        { name: 'show All Employees', value: 'showAllEmployees' },
+        { name: 'show All Roles', value: 'showAllRoles' },
+        { name: 'show All Departments', value: 'showAllDepartments' },
+        { name: 'Exit', value: 'exit' },
+
+    ];
+
+    inquirer.prompt([
+        {
+            type: 'rawlist',
+            name: 'query',
+            message: 'What option would you like to select?',
+            choices,
         }
+    ]).then((answers) => fn[answers.query]());
+};
 
-        else if(answer.start === "Departments") {
-            getDepts();
-        }
-
-        else if(answer.start === "Roles") {
-            getRoles();
-        }
-
-        else if(answer.start === "Add Employee") {
-            addEmployee();
-        }
-
-        else if(answer.start === "Add Department") {
-            addDept();
-        }
-
-        else if(answer.start === "Add Role") {
-            addRole();
-        }
-
-        else if(answer.start === "Update Role") {
-            updateRole();
-        } else {
-            connection.end();
-        }
-
-    })
-}
-
-
-
-
-// connection.query('SELECT * FROM employees', function(err, results) {
-//     console.log(results)
-// });
+init();
+  
 
 
