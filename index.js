@@ -76,10 +76,10 @@ function addRole() {
             name: 'deptId',
             message: 'What is the department id number?'
         },
-       
-    ]).then(function(answer){
-        db.query("INSERT INTO role (first_name, last_name, role_id, manager_id) VALUES (?,?,?)", [answer.roleName, answer.salary, answer.deptId], function(err, res) {
-            if(err) throw err;
+
+    ]).then(function (answer) {
+        db.query("INSERT INTO role (first_name, last_name, role_id, manager_id) VALUES (?,?,?)", [answer.roleName, answer.salary, answer.deptId], function (err, res) {
+            if (err) throw err;
             console.table(res);
             startSearch();
         });
@@ -109,16 +109,40 @@ function addEmployee() {
             name: 'managerId',
             message: 'What is the manager id number?'
         },
-    ]).then(function(answer){
-        db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)", [answer.eFirstName, answer.eLastName, answer.roleId, answer.managerId], function(err, res) {
-            if(err) throw err;
+    ]).then(function (answer) {
+        db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)", [answer.eFirstName, answer.eLastName, answer.roleId, answer.managerId], function (err, res) {
+            if (err) throw err;
             console.table(res);
             startSearch();
         });
     });
 }
 
-// join stuff
+function updateEmployee() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "empUpdate",
+            message: "What is the id of the employee that you want to update?"
+        },
+        {
+            type: "input",
+            name: "updateRole",
+            message: "What is the role id you want to update the employee to?"
+        },
+
+    ]).then(function (answer) {
+        db.query('UPDATE employee SET role_id=? WHERE id=?', [answer.updateRole, answer.empUpdate], function (err, res) {
+            if (err) throw err;
+            console.table(res);
+            startSearch();
+        })
+    })
+}
+
+
+
+
 
 function startSearch() {
     inquirer.prompt({
@@ -131,6 +155,7 @@ function startSearch() {
             "Add Employee",
             "Add Role",
             "Add Department",
+            "Update Employee",
             "EXIT",
         ],
         name: "choice"
@@ -138,25 +163,28 @@ function startSearch() {
         console.log(answers.choice);
         switch (answers.choice) {
             case "Show All Employees":
-                showAllEmployees()
+                showAllEmployees();
                 break;
             case "Show All Roles":
-                showAllRoles()
+                showAllRoles();
                 break;
             case "Show All Departments":
-                showAllDepartments()
+                showAllDepartments();
                 break;
             case "Add Department":
-                addDepartment()
+                addDepartment();
                 break;
             case "Add Role":
-                addRole()
+                addRole();
                 break;
             case "Add Employee":
                 addEmployee();
                 break;
+            case "Update Employee":
+                updateEmployee();
+                break;
             case "EXIT":
-                exit()
+                exit();
                 break;
 
         }
