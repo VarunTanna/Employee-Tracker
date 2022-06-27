@@ -118,6 +118,8 @@ function addEmployee() {
     });
 }
 
+// join stuff
+
 function startSearch() {
     inquirer.prompt({
         message: 'What would you like to do?',
@@ -161,7 +163,6 @@ function startSearch() {
     })
 }
 
-// function exit() {
-//     connection.end();
-//     process.exit();
-// }
+function exit() {
+    process.exit();
+}
