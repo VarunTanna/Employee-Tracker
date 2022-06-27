@@ -33,22 +33,22 @@ INSERT INTO role (title, salary, department_id)
 VALUES ("CEO", 100000, 5);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Dave", "Portnoy", 5, 0)
+VALUES ("Dave", "Portnoy", 5, 0);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Elon", "Musk", 5, 0)
+VALUES ("Elon", "Musk", 5, 0);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Tony", "Stark", 3, 0)
+VALUES ("Tony", "Stark", 3, 0);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Kobe", "Bryant", 3, 0)
+VALUES ("Kobe", "Bryant", 3, 0);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("David", "Goggins", 1, 0)
+VALUES ("David", "Goggins", 1, 0);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Joe", "Rogan", 1, 0)
+VALUES ("Joe", "Rogan", 1, 0);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Bill", "Gates", 2, 0)
+VALUES ("Bill", "Gates", 2, 0);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Warren", "Buffet", 2, 0)
+VALUES ("Warren", "Buffet", 2, 0);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Tom", "Brady", 4, 0)
+VALUES ("Tom", "Brady", 4, 0);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Tiger", "Woods", 4, 0)
+VALUES ("Tiger", "Woods", 4, 0);
