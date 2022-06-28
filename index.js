@@ -183,7 +183,7 @@ function updateEmployeeRole() {
                     }
                 ])
                 .then(function (answer) {
-                    db.query('UPDATE employee FROM role_id? WHERE id=?', [answer.updateRole, answer.updateEmployee], function (err, res){
+                    db.query('UPDATE employee SET role_id = ? WHERE id = ?', [answer.updateRole, answer.updateEmployee], function (err, res){
                         if (err) throw err;
                         console.table(res);
                     })
