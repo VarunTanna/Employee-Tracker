@@ -19,7 +19,8 @@ db.connect(function (err) {
 
 const showAllEmployees = () => {
     // let query = "SELECT * FROM employee";
-    db.query('SELECT * FROM employee', function (err, results) {
+    db.query('SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, " ", manager.last_name) AS manager FROM employee LEFT JOIN role  ON employee.role_id = role.id LEFT JOIN department  ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id', function (err, results) {
+    
         if (err) return console.error(err);
         // if (err) throw err;
         console.table(results);
@@ -28,7 +29,7 @@ const showAllEmployees = () => {
 }
 
 const showAllRoles = () => {
-    db.query('SELECT * FROM role', function (err, results) {
+    db.query('SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department ON role.department_id = department.id', function (err, results) {
         if (err) return console.error(err);
         // if (err) throw err;
         console.table(results);
@@ -78,7 +79,7 @@ function addRole() {
         },
 
     ]).then(function (answer) {
-        db.query("INSERT INTO role (first_name, last_name, role_id, manager_id) VALUES (?,?,?)", [answer.roleName, answer.salary, answer.deptId], function (err, res) {
+        db.query("INSERT INTO role (title, salary, role.id, department_id) VALUES (?,?,?, ?)", [answer.roleName, answer.salary, answer.deptId, 0], function (err, res) {
             if (err) throw err;
             console.table(res);
             startSearch();
@@ -118,26 +119,70 @@ function addEmployee() {
     });
 }
 
-function updateEmployee() {
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "empUpdate",
-            message: "What is the id of the employee that you want to update?"
-        },
-        {
-            type: "input",
-            name: "updateRole",
-            message: "What is the role id you want to update the employee to?"
-        },
+// function updateEmployee() {
+//     inquirer.prompt([
+//         {
+//             type: "input",
+//             name: "empUpdate",
+//             message: "What is the id of the employee that you want to update?"
+//         },
+//         {
+//             type: "input",
+//             name: "updateRole",
+//             message: "What is the role id you want to update the employee to?"
+//         },
 
-    ]).then(function (answer) {
-        db.query('UPDATE employee SET role_id=? WHERE id=?', [answer.updateRole, answer.empUpdate], function (err, res) {
-            if (err) throw err;
-            console.table(res);
-            startSearch();
+//     ]).then(function (answer) {
+//         db.query('UPDATE employee SET role_id=? WHERE id=?', [answer.updateRole, answer.empUpdate], function (err, res) {
+//             if (err) throw err;
+//             console.table(res);
+//             startSearch();
+//         })
+//     })
+// }
+
+
+// tutor help
+function updateEmployeeRole() {
+    showAllEmployees()
+    .then(([rows]) => {
+        let employees = rows;
+        const employeeChoices = employees.map(({ id, first_name, last_name}) => ({
+            name: `${first_name} ${last_name}`,
+            value: id
+        }));
+
+        prompt([
+            {
+                type: "list",
+                name: "employeeId",
+                message: "Which employee's role do you want to update?",
+                choices: employeeChoices
+            }
+        ]).then(res => {
+            let employeeId = res.employeeId;
+            showAllRoles()
+            .then(([rows]) => {
+                let roles = rows;
+                const roleChoices = roles.map(({ id, title }) => ({
+                    name: title, 
+                    value: id
+                }));
+
+                prompt([
+                    {
+                        type: "list",
+                        name: "roleId",
+                        message: "Which role do you want to assign the selected employee?",
+                        choices: roleChoices
+                    }
+                ])
+                .then( res => updateEmployeeRole(employeeId, res.roleId))
+                .then(() => startSearch());
+            })
         })
     })
+    
 }
 
 
@@ -181,7 +226,7 @@ function startSearch() {
                 addEmployee();
                 break;
             case "Update Employee":
-                updateEmployee();
+                updateEmployeeRole();
                 break;
             case "EXIT":
                 exit();
