@@ -75,11 +75,11 @@ function addRole() {
         {
             type: 'input',
             name: 'deptId',
-            message: 'What is the department id number?'
+            message: 'What is the department name?'
         },
 
     ]).then(function (answer) {
-        db.query("INSERT INTO role (title, salary, role.id, department_id) VALUES (?,?,?, ?)", [answer.roleName, answer.salary, answer.deptId, 0], function (err, res) {
+        db.query("INSERT INTO role (title, salary, role.id, department_id) VALUES (?,?,?,?)", [answer.roleName, answer.salary, answer.deptId, 0], function (err, res) {
             if (err) throw err;
             console.table(res);
             startSearch();
